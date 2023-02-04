@@ -14,5 +14,13 @@ export class User {
 
   @Field()
   @Column()
+  accessToken: string;
+
+  @Field()
+  @Column()
+  refreshToken: string;
+
+  @Field()
+  @Column()
   password: string;
 }

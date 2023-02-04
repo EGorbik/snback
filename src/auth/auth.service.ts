@@ -4,6 +4,7 @@ import { LoginUserInput } from './dto/login-user.input';
 import { User } from 'src/users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { SignUpInput } from './dto/signup-input';
 
 @Injectable()
 export class AuthService {
@@ -36,20 +37,39 @@ export class AuthService {
     };
   }
 
-  async signup(loginUserInput: LoginUserInput) {
+  async signup(signUpInput: SignUpInput) {
     const user: User | null = await this.usersService.getUserByUsername(
-      loginUserInput.username,
+      signUpInput.username,
     );
 
     if (user) {
       throw new Error('User already exists!');
     }
 
-    const password = await bcrypt.hash(loginUserInput.password, 10);
+    const password = await bcrypt.hash(signUpInput.password, 10);
+
+    const { accessToken, refreshToken } = await this.createTokens(user.id);
 
     return this.usersService.createUser({
-      ...loginUserInput,
+      ...signUpInput,
       password,
     });
+  }
+
+  async createTokens(userId: number) {
+    const accessToken = this.jwtService.sign(
+      {
+        userId,
+      },
+      { expiresIn: '10s', secret: process.env.ACCESS_TOKEN_SECRET },
+    );
+    const refreshToken = this.jwtService.sign(
+      {
+        userId,
+        accessToken,
+      },
+      { expiresIn: '7d', secret: process.env.ACCESS_TOKEN_SECRET },
+    );
+    return { accessToken, refreshToken };
   }
 }

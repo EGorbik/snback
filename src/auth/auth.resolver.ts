@@ -6,6 +6,8 @@ import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { LoginUserInput } from './dto/login-user.input';
 import { LoginResponse } from './dto/login-response';
 import { UseGuards } from '@nestjs/common';
+import { SignResponse } from './dto/sign-response';
+import { SignUpInput } from './dto/signup-input';
 
 @Resolver()
 export class AuthResolver {
@@ -20,8 +22,8 @@ export class AuthResolver {
     return this.authService.login(context.body);
   }
 
-  @Mutation(() => User)
-  signup(@Args('loginUserInput') loginUserInput: LoginUserInput) {
-    return this.authService.signup(loginUserInput);
+  @Mutation(() => SignResponse)
+  signup(@Args('signUpInput') signUpInput: SignUpInput) {
+    return this.authService.signup(signUpInput);
   }
 }

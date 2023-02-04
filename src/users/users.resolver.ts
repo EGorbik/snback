@@ -34,9 +34,10 @@ export class UsersResolver {
 
   @Query(() => [User])
   async getAllUsers(
-    @Args('searchText', { type: () => String }) searchText: string,
-    @Args('take', { type: () => Int }) take = 10,
-    @Args('skip', { type: () => Int }) skip = 0,
+    @Args('searchText', { nullable: true, type: () => String })
+    searchText: string,
+    @Args('take', { type: () => Int, nullable: true }) take = 10,
+    @Args('skip', { type: () => Int, nullable: true }) skip = 1,
   ) {
     return this.usersService.getAllUsers(searchText, take, skip);
   }

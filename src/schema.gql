@@ -21,13 +21,24 @@ type Mutation {
   createUser(createUser: CreateUserInput!): User!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   removeUser(id: Float!): Float!
-  signup(loginUserInput: LoginUserInput!): User!
+  signup(signUpInput: SignUpInput!): SignResponse!
   updateUser(updateUser: UpdateUserInput!): User!
 }
 
 type Query {
-  getAllUsers(searchText: String!, skip: Int!, take: Int!): [User!]!
+  getAllUsers(searchText: String, skip: Int, take: Int): [User!]!
   getOneUser(id: Float!): User!
+}
+
+type SignResponse {
+  accessToken: String!
+  refreshToken: String!
+  user: User!
+}
+
+input SignUpInput {
+  password: String!
+  username: String!
 }
 
 input UpdateUserInput {
